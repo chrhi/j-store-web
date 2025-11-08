@@ -1,15 +1,14 @@
-import Image from "next/image";
+import SignUpPage from "@/modules/auth/pages/signup.page";
 
-export default function SignInPage() {
+
+
+export default function View() {
   return (
-    <div className="w-full h-screen grid grid-cols-3">
-      <div className="w-full h-full bg-[#45ACAB] flex items-center justify-center">
-       <Image src={"/jethings-logo-white-light.svg"} alt="logo" width={200} height={200} />
-      </div>
+    <div className="flex flex-col gap-y-4">
 
-      <div className="w-full h-full bg-black col-span-2">
-        {/* Your sign-in form will go here */}
-      </div>
+     
+        <SignUpPage />
     </div>
+ 
   );
 }
