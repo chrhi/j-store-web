@@ -1,66 +1,89 @@
 "use client"
 
-import React, { useState } from 'react';
-import { 
-  Store, 
-  Package, 
-  Tag, 
-  ShoppingCart, 
-  BarChart3, 
-  HelpCircle, 
+import React from "react"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+import {
+  Store,
+  Package,
+  Tag,
+  ShoppingCart,
+  BarChart3,
+  HelpCircle,
   Settings,
-  LucideIcon
-} from 'lucide-react';
+} from "lucide-react"
+
+type LucideIcon = typeof Store
 
 interface MenuItem {
-  id: string;
-  label: string;
-  icon: LucideIcon;
+  id: string
+  label: string
+  icon: LucideIcon
+  href: string
 }
 
 interface MenuItemProps {
-  item: MenuItem;
+  item: MenuItem
+  isActive: boolean
 }
 
-const Sidebar: React.FC = () => {
-  const [activeRoute, setActiveRoute] = useState<string>('point-of-sale');
+export const MainSideBar: React.FC = () => {
+  const pathname = usePathname()
 
   const generalMenuItems: MenuItem[] = [
-    { id: 'point-of-sale', label: 'Point of sale', icon: Store },
-    { id: 'inventory', label: 'Inventory', icon: Package },
-    { id: 'sales', label: 'Sales', icon: Tag },
-    { id: 'buy', label: 'Buy', icon: ShoppingCart },
-    { id: 'reports', label: 'Reports', icon: BarChart3 },
-  ];
+    {
+      id: "point-of-sale",
+      label: "Point of sale",
+      icon: Store,
+      href: "/id",
+    },
+    { id: "stock", label: "Stock", icon: Package, href: "/id/stock" },
+    { id: "sales", label: "Sales", icon: Tag, href: "/id/sales" },
+    { id: "buy", label: "Buy", icon: ShoppingCart, href: "/id/buy" },
+    { id: "reports", label: "Reports", icon: BarChart3, href: "/id/reports" },
+  ]
 
   const supportMenuItems: MenuItem[] = [
-    { id: 'help', label: 'Help', icon: HelpCircle },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+    { id: "help", label: "Help", icon: HelpCircle, href: "/id/help" },
+    { id: "settings", label: "Settings", icon: Settings, href: "/id/settings" },
+  ]
 
-  const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
-    const Icon = item.icon;
-    const isActive = activeRoute === item.id;
+  // Check if current path matches or is a nested route of the menu item
+  const isItemActive = (href: string): boolean => {
+    if (pathname === href) return true
+    // Check if current path starts with the href (for nested routes)
+    return pathname.startsWith(href + "/")
+  }
+
+  const MenuItem: React.FC<MenuItemProps> = ({ item, isActive }) => {
+    const Icon = item.icon
 
     return (
-      <button
-        onClick={() => setActiveRoute(item.id)}
+      <Link
+        href={item.href}
         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
           isActive
-            ? 'bg-teal-50 text-teal-600'
-            : 'text-gray-600 hover:bg-gray-50'
+            ? "bg-teal-50 text-teal-600"
+            : "text-gray-600 hover:bg-gray-50"
         }`}
       >
-        <Icon size={20} className={isActive ? 'text-teal-600' : 'text-gray-500'} />
-        <span className={`font-medium ${isActive ? 'text-teal-600' : 'text-gray-700'}`}>
+        <Icon
+          size={20}
+          className={isActive ? "text-teal-600" : "text-gray-500"}
+        />
+        <span
+          className={`font-medium ${
+            isActive ? "text-teal-600" : "text-gray-700"
+          }`}
+        >
           {item.label}
         </span>
-      </button>
-    );
-  };
+      </Link>
+    )
+  }
 
   return (
-    <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-72 h-screen bg-white border-r border-gray-200 flex flex-col">
       {/* General Section */}
       <div className="flex-1 px-3 py-6">
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
@@ -68,7 +91,11 @@ const Sidebar: React.FC = () => {
         </h2>
         <nav className="space-y-1">
           {generalMenuItems.map((item) => (
-            <MenuItem key={item.id} item={item} />
+            <MenuItem
+              key={item.id}
+              item={item}
+              isActive={isItemActive(item.href)}
+            />
           ))}
         </nav>
       </div>
@@ -80,12 +107,14 @@ const Sidebar: React.FC = () => {
         </h2>
         <nav className="space-y-1">
           {supportMenuItems.map((item) => (
-            <MenuItem key={item.id} item={item} />
+            <MenuItem
+              key={item.id}
+              item={item}
+              isActive={isItemActive(item.href)}
+            />
           ))}
         </nav>
       </div>
     </div>
-  );
-};
-
-export default Sidebar;
+  )
+}

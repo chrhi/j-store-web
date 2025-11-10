@@ -1,4 +1,4 @@
-import MainSideBar from "@/components/side-bar"
+import { MainSideBar } from "@/components/side-bar"
 import { Button } from "@/components/ui/button"
 import { Store, X } from "lucide-react"
 import Link from "next/link"
