@@ -15,24 +15,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import React from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function List<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = React.useState({})
+
   const table = useReactTable({
     data,
     columns,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      rowSelection,
+    },
   })
 
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="overflow-hidden ">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
